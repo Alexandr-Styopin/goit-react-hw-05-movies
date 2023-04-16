@@ -1,17 +1,31 @@
-async function fethTrending() {
-  const API_KEY = 'aa1d2a2b8177ac3b5ad3698898d78d80';
+import { Routes, Route } from 'react-router-dom';
+import { lazy } from 'react';
+import SharedLayout from './SharedLayout/SharedLayout';
 
-  return await fetch(
-    `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&page=1`
-  ).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
+// import Home from '../pages/Home/Home';
+// import Movies from '../pages/Movies/Movies';
+// import MovieDetails from '../pages/MovieDetails/MovieDetails';
+// import Cast from './Cast/Cast';
+// import Reviews from './Reviews/Reviews';
 
-    return response.json();
-  });
-}
-fethTrending().then(data => console.log(data));
+const Home = lazy(() => import('../pages/Home/Home'));
+const Movies = lazy(() => import('../pages/Movies/Movies'));
+const MovieDetails = lazy(() => import('../pages/MovieDetails/MovieDetails'));
+const Cast = lazy(() => import('./Cast/Cast'));
+const Reviews = lazy(() => import('./Reviews/Reviews'));
+
 export const App = () => {
-  return <div>React homework template</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route index element={<Home />} />
+        <Route path="movies" element={<Movies />} />
+
+        <Route path="movies/:moviesId" element={<MovieDetails />}>
+          <Route path="cast" element={<Cast />} />
+          <Route path="reviews" element={<Reviews />} />
+        </Route>
+      </Route>
+    </Routes>
+  );
 };
